@@ -1,3 +1,35 @@
+## Install project:
+
+Clone this repository and follow instructions bellow
+
+```
+ $ cd frappe_docker
+
+ $ docker-compose up -d
+
+./dbench init
+
+./dbench -c start
+
+```
+
+## Adds password to admin:
+
+```
+./dbench
+
+bench set-admin-password "password"
+
+```
+
+## Access project:
+
+Aceess at `localhost:8000` with Login `Administrator` and Password `password`
+
+
+##  cloned project README
+
+
 # frappe_docker
 [![Build Status](https://travis-ci.org/frappe/frappe_docker.svg?branch=master)](https://travis-ci.org/frappe/frappe_docker)
 
