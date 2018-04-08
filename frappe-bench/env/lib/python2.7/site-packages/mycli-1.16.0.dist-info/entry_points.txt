@@ -1,0 +1,7 @@
+[console_scripts]
+mycli = mycli.main:cli
+
+[distutils.commands]
+lint = tasks:lint
+test = tasks:test
+
