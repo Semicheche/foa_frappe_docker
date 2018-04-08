@@ -18,14 +18,15 @@ def execute(filters=None):
 		data.append(opening_row)
 
 	for sle in sl_entries:
-		item_detail = item_details[sle.item_code]
+		if sle and item_details:
+			item_detail = item_details[sle.item_code]
 
-		data.append([sle.date, sle.item_code, item_detail.item_name, item_detail.item_group,
-			item_detail.brand, item_detail.description, sle.warehouse,
-			item_detail.stock_uom, sle.actual_qty, sle.qty_after_transaction,
-			(sle.incoming_rate if sle.actual_qty > 0 else 0.0),
-			sle.valuation_rate, sle.stock_value, sle.voucher_type, sle.voucher_no,
-			sle.batch_no, sle.serial_no, sle.project, sle.company])
+			data.append([sle.date, sle.item_code, item_detail.item_name, item_detail.item_group,
+				item_detail.brand, item_detail.description, sle.warehouse,
+				item_detail.stock_uom, sle.actual_qty, sle.qty_after_transaction,
+				(sle.incoming_rate if sle.actual_qty > 0 else 0.0),
+				sle.valuation_rate, sle.stock_value, sle.voucher_type, sle.voucher_no,
+				sle.batch_no, sle.serial_no, item_detail.country_of_origin, item_detail.country_of_destiny, sle.project, sle.company])
 
 	return columns, data
 
@@ -46,6 +47,8 @@ def get_columns():
 		_("Voucher #") + ":Dynamic Link/" + _("Voucher Type") + ":100",
 		_("Batch") + ":Link/Batch:100",
 		_("Serial #") + ":Link/Serial No:100",
+		_("Country of Origin") + ":Link/Country",
+		_("Country of Destiny") + ":Link/Country",
 		_("Project") + ":Link/Project:100",
 		{"label": _("Company"), "fieldtype": "Link", "width": 110,
 			"options": "company", "fieldname": "company"}
@@ -76,7 +79,7 @@ def get_stock_ledger_entries(filters, item_conditions, item_details):
 def get_item_details(filters, item_conditions):
 	item_details = {}
 	for item in frappe.db.sql("""select name, item_name, description, item_group,
-			brand, stock_uom from `tabItem` item {item_conditions}"""\
+			brand, stock_uom, country_of_origin, country_of_destiny from `tabItem` item {item_conditions}"""
 			.format(item_conditions=item_conditions), filters, as_dict=1):
 		item_details.setdefault(item.name, item)
 
@@ -90,6 +93,10 @@ def get_item_conditions(filters):
 		conditions.append("item.brand=%(brand)s")
 	if filters.get("item_group"):
 		conditions.append(get_item_group_condition(filters.get("item_group")))
+	if filters.get("country_of_origin"):
+		conditions.append("item.country_of_origin=%(country_of_origin)s")
+	if filters.get("country_of_destiny"):
+		conditions.append("item.country_of_destiny=%(country_of_destiny)s")
 
 	return "where {}".format(" and ".join(conditions)) if conditions else ""
 

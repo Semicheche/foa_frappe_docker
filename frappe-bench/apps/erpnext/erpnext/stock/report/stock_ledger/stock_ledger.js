@@ -65,6 +65,18 @@ frappe.query_reports["Stock Ledger"] = {
 			"label": __("Project"),
 			"fieldtype": "Link",
 			"options": "Project"
+		},
+		{
+			"fieldname":"country_of_origin",
+			"label": __("Country of Origin"),
+			"fieldtype": "Link",
+			"options": "Country"
+		},
+		{
+			"fieldname":"country_of_destiny",
+			"label": __("Country of Destiny"),
+			"fieldtype": "Link",
+			"options": "Country"
 		}
 	]
 }
